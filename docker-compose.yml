@@ -13,3 +13,22 @@ services:
 
     command: >
       sh -c  "python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DB_HOST=db # This is the name of the service that will run the database
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASSWORD=changeme
+    depends_on:
+      - db # Tells Docker Compose to start the db service before the app service
+
+  db: # This is the name of the service that will run the database
+    image: postgres:13-alpine
+    volumes:
+      - dev-db-data:/var/lib/postgresql/data # This is the volume that will persist the data
+    environment:
+      - POSTGRES_DB=devdb
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=changeme
+
+volumes:
+  dev-db-data:

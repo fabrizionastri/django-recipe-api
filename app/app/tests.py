@@ -6,6 +6,7 @@ Sample tests
 from django.test import SimpleTestCase
 from app.calc import add, substract
 
+
 class CalcTests(SimpleTestCase):
     """ Sample tests for the calculator app """
     def test_add(self):
