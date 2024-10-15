@@ -22,10 +22,10 @@ class CommandTests(SimpleTestCase):
 
     @patch('time.sleep')                                                     # patch the time.sleep method, to avoid real delays during the tests. It replaces it with a MagicMock object, with a None return value
     def test_wait_for_db_delay(self, patched_sleep, patched_check):          # patch_check is the patched check method
-    # Beware of the order of the arguments. The arguments order corresponds to the order in which the patches are applied, "inside-out" (i.e. starting with the bottom one, going up). So he patched_sleep method is the first argument, and the patch_check method is the second argument
+        # Beware of the order of the arguments. The arguments order corresponds to the order in which the patches are applied, "inside-out" (i.e. starting with the bottom one, going up). So he patched_sleep method is the first argument, and the patch_check method is the second argument
         """ Test waiting for db when getting OperationalError. """
         # The first 2 times, the check method will raise an Psycopg2Error (the database is not available) , the next 3 times, it will raise a OperationalError (from Django, the database server is available but it has not yet setup the test database), and the last time, it will return True
-        patched_check.side_effect = [Psycopg2Error]   * 2 + \
+        patched_check.side_effect = [Psycopg2Error] * 2 + \
             [OperationalError] * 3 + [True
                                       ]
 
@@ -34,4 +34,3 @@ class CommandTests(SimpleTestCase):
         # check if the check method was called 6 times
         self.assertEqual(patched_check.call_count, 6)
         patched_check.assert_called_with(databases=['default'])
-
