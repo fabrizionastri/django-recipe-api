@@ -1,12 +1,9 @@
 """
-Django custom command to wait for database to be available
+Django command to wait for the database to be available.
 """
-from django.core.mangement.base import BaseCommand
+from django.core.management.base import BaseCommand
 
 class Command(BaseCommand):
-    """Django command to pause execution until database is available"""
-
+    """Django command to wait for database."""
     def handle(self, *args, **options):
         pass
-        self.stdout.write('Waiting for database...')
-        self.stdout.write('Database available!')
