@@ -3,6 +3,8 @@
 from django.test import TestCase                             # Base class for testing Django applications
 from django.contrib.auth import get_user_model               # function to get the default user model for the project, if allows you to get the user model that is active in the current project, even if you change the user model in the future. It is a good practice to use this function to get the user model, instead of importing the user model directly
 
+from decimal import Decimal as Dec
+from core import models
 
 class ModelTests(TestCase):
     """ Test the user model """
@@ -45,3 +47,15 @@ class ModelTests(TestCase):
         print('test_create_new_superuser')
         user = get_user_model().objects.create_superuser('test@example.com', 'pwd123')
         self.assertTrue(user.is_superuser)
+
+    def test_create_recipe(self):
+        """ Test creating a new recipe """
+        user = get_user_model().objects.create_user('test@example.com', 'pwd123')
+        recipe = models.Recipe.objects.create(
+            user = user,
+            title = 'Sample recipe name',
+            time_minutes = 5,
+            price  = Dec('5.50'),
+            description= 'Sample recipe description'
+        )
+        self.assertEqual(str(recipe), recipe.title)

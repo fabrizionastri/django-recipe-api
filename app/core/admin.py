@@ -29,3 +29,4 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(models.User, UserAdmin)
+admin.site.register(models.Recipe)                  # no need to create a custom admin for the Recipe model, so we just register it with the default admin
