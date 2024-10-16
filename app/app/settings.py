@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'rest_framework',
+    'drf_spectacular',
 ]
 
 LANGUAGE_CODE = 'en-us'
@@ -137,3 +139,10 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'core.User'           # Set the custom user model as the default user model
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',       # Configures the Django REST framework to use the OpenAPI format with the drf_spectacular schema generator
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (                                  # Configures the Django REST framework to use the token authentication
+    #     'rest_framework.authentication.TokenAuthentication',
+    # ),
+}
