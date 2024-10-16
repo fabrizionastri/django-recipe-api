@@ -32,19 +32,20 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.admin',                     # built-in Django, for Django admin interface
+    'django.contrib.auth',                      # built-in Django, for authentication system
+    'django.contrib.contenttypes',              # built-in Django, for contenttypes framework
+    'django.contrib.sessions',                  # built-in Django, for session framework
+    'django.contrib.messages',                  # built-in Django, for messaging framework
+    'django.contrib.staticfiles',               # built-in Django, for static files framework
+    'rest_framework',                           # built-in Django, for Django REST framework
+    'rest_framework.authtoken',                 # built-in Django, for token authentication
+    'drf_spectacular',                          # pip package, to generate the OpenAPI schema
     'core',
     'user',
-    'rest_framework',
-    'drf_spectacular',
 ]
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-us'                         # set the default language code to 'en-us', used for localization
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
