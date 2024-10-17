@@ -12,14 +12,14 @@ CREATE_USER_URL = reverse('user:create')  # get the url by its name composed, as
 TOKEN_URL = reverse('user:token')         # get the url by its name composed, as a the app name + the url name
 ME_URL = reverse('user:me')               # get the url by its name composed, as a the app name + the url name
 
-user_details = {                    # create a payload
-        'email': 'user@example.com',
-        'password': 'password123',
-        'name': 'Test User'
-    }
 
 def create_user(**params):
     """ Create and return a new user """
+    default_user_details = {                    # create a payload
+            'email': 'user@example.com',
+            'password': 'password123',
+            'name': 'Test User'
+        }
     return get_user_model().objects.create_user(**params)
 
 class PublicUserApiTests(TestCase):                                             # Tests for unauthenticated requests
@@ -30,46 +30,46 @@ class PublicUserApiTests(TestCase):                                             
 
     def test_create_valid_user_success(self):
         """ Test creating user with valid payload is successful """
-        response = self.client.post(CREATE_USER_URL, user_details)
+        response = self.client.post(CREATE_USER_URL, default_user_details)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)         # check if the response status code is 201
-        user = get_user_model().objects.get(email=user_details['email'])        # get the user from the database
-        self.assertTrue(user.check_password(user_details['password']))          # check if the password is correct
+        user = get_user_model().objects.get(email=default_user_details['email'])        # get the user from the database
+        self.assertTrue(user.check_password(default_user_details['password']))          # check if the password is correct
         self.assertNotIn('password', response.data)                             # check that the password is not in the response
 
     def test_user_already_exists(self):
         """ Test creating a user that already exists fails """
-        create_user(**user_details)                                              # create a user in the database with the payload
-        response = self.client.post(CREATE_USER_URL, user_details)               # simulate a post request with the same payload
+        create_user(**default_user_details)                                              # create a user in the database with the payload
+        response = self.client.post(CREATE_USER_URL, default_user_details)               # simulate a post request with the same payload
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)      # check if the response status code is 400
 
     def test_password_too_short(self):
         """ Test that the password must be more than 5 characters """
-        user_details['password'] = 'pw'
-        response = self.client.post(CREATE_USER_URL, user_details)
+        default_user_details['password'] = 'pw'
+        response = self.client.post(CREATE_USER_URL, default_user_details)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)     # check if the response status code is 400
-        user_exists = get_user_model().objects.filter(email=user_details['email']).exists()    # check if the user exists in the database
+        user_exists = get_user_model().objects.filter(email=default_user_details['email']).exists()    # check if the user exists in the database
         self.assertFalse(user_exists)                                            # check that the user does not exist
 
     def test_create_token_for_user(self):
         """ Test generates token for valid credentials """
-        create_user(**user_details)                                             # create a user in the database with the payload
-        payload = { 'email': user_details['email'], 'password': user_details['password'] }
+        create_user(**default_user_details)                                             # create a user in the database with the payload
+        payload = { 'email': default_user_details['email'], 'password': default_user_details['password'] }
         response = self.client.post(TOKEN_URL, payload)                         # simulate a post request with the payload
         self.assertIn('token', response.data)                                   # check that the token is in the response
         self.assertEqual(response.status_code, status.HTTP_200_OK)              # check if the response status code is 200
 
     def test_create_token_invalid_credentials(self):
         """ Test that token is not created if invalid credentials are given """
-        create_user(**user_details)                                             # create a user in the database with the payload
-        payload = { 'email': user_details['email'], 'password': 'wrong' }
+        create_user(**default_user_details)                                             # create a user in the database with the payload
+        payload = { 'email': default_user_details['email'], 'password': 'wrong' }
         response = self.client.post(TOKEN_URL, payload)                         # simulate a post request with the payload
         self.assertNotIn('token', response.data)                                # check that the token is not in the response
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)     # check if the response status code is 400
 
     def test_create_token_blank_password(self):
         """ Test that token is not created if password is blank """
-        create_user(**user_details)                                             # create a user in the database with the payload
-        payload = { 'email': user_details['email'], 'password': '' }
+        create_user(**default_user_details)                                             # create a user in the database with the payload
+        payload = { 'email': default_user_details['email'], 'password': '' }
         response = self.client.post(TOKEN_URL, payload)                         # simulate a post request with the payload
         self.assertNotIn('token', response.data)                                # check that the token is not in the response
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -82,7 +82,7 @@ class PublicUserApiTests(TestCase):                                             
 class PrivateUserApiTests(TestCase):                                            # Tests for authenticated requests
 
     def setUp(self):
-        self.user = create_user(**user_details)                                 # create a user in the database with the payload
+        self.user = create_user(**default_user_details)                                 # create a user in the database with the payload
         self.client = APIClient()                                               # create a client
         self.client.force_authenticate(user=self.user)                          # authenticate the user using the client using the force_authenticate to avoid making real authentication
 

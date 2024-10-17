@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'drf_spectacular',                          # pip package, to generate the OpenAPI schema
     'core',
     'user',
+    'recipe'
 ]
 
 LANGUAGE_CODE = 'en-us'                         # set the default language code to 'en-us', used for localization

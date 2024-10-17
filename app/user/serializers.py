@@ -3,9 +3,9 @@
 from django.contrib.auth import (
     get_user_model,
     authenticate
-)                                                                         # import the get_user_model and authenticate functions from the django.contrib.auth module
+)                                                                           # import the get_user_model and authenticate functions from the django.contrib.auth module
 from rest_framework import serializers                                      # import the serializers module, which is a part of the rest_framework package to serialize and deserialize data. Converts between JSON and Python data types or a model instance in our database
-from django.utils.translation import ugettext_lazy as _                      # import the ugettext_lazy function from the django.utils.translation module to translate the strings in the serializer
+from django.utils.translation import ugettext_lazy as _                     # import the ugettext_lazy function from the django.utils.translation module to translate the strings in the serializer
 
 class UserSerializer(serializers.ModelSerializer):                          # create a UserSerializer class that inherits from the ModelSerializer class. The ModelSerializer class is a class provided by the Django REST framework that automatically generates a serializer class based on the model class that we provide. It allows us to validate and save data to the database according to the model class that we provide
     """ Serializer for the user object """

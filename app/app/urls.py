@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),                         # route to serve the OpenAPI schema in yaml format
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='api-schema'), name='api-docs'),    # route to serve the Swagger UI
-    path('api/user/', include('user.urls')),                                                     # route to the user app
+    path('api/user/', include('user.urls'), name='api-user'),
+    path('api/recipe/', include('recipe.urls'), name='api-recipe')
 ]
