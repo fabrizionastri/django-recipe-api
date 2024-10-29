@@ -1,6 +1,4 @@
-"""
-Database models for the core app.
-"""
+# ------------ app/core/models.py
 
 from django.conf import settings                 # Import the settings module to access the AUTH_USER_MODEL setting
 from django.db import models

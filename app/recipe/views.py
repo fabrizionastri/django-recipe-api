@@ -5,7 +5,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from core.models import Recipe
-from recipe.serializers import RecipeSerializer
+from recipe.serializers import RecipeSerializer, RecipeDetailSerializer
 
 
 # def index(request):
@@ -13,8 +13,8 @@ from recipe.serializers import RecipeSerializer
 #     return RecipeSerializer(Recipe.objects.all().order_by('-id'), many=True)
 
 class RecipeViewSet(viewsets.ModelViewSet):         # ModelViewSet is designed to manage models in the database
-    """ View for manage reipe APIs."""              # This view will offer multiple endpoints for the Recipe model (list, create, update, delete)
-    serializer_class = RecipeSerializer             # serializer_class is the serializer class that this view set will use to serialize and deserialize the data
+    """ View for recipe list APIs."""              # This view will offer multiple endpoints for the Recipe model (list, create, update, delete)
+    serializer_class = RecipeDetailSerializer             # serializer_class is the serializer class that this view set will use to serialize and deserialize the data
     queryset = Recipe.objects.all()                 # queryset is the list of objects that this view set has access to
     authentication_classes = (TokenAuthentication,) # authentication_classes is the list of authentication classes that this view set will use to authenticate the user → we used TokenAuthentication to authenticate the user with the token that is provided in the request
     permission_classes = (IsAuthenticated,)         # permission_classes is the list of permission classes that this view set will use to check the permissions of the user → users need to be authenticated to access this view
@@ -27,3 +27,10 @@ class RecipeViewSet(viewsets.ModelViewSet):         # ModelViewSet is designed t
 #     def perform_create(self, serializer):           # we need to override the built-in perform_create method to assign the authenticated user to the recipe
 #         """ Create a new recipe """
 #         serializer.save(user=self.request.user)
+
+    def get_serializer_class(self):
+        """ Return the serializer class for request. """
+        if self.action == 'list':
+            return RecipeSerializer                  # we only use the
+
+        return self.serializer_class

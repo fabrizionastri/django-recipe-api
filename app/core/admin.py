@@ -1,3 +1,4 @@
+# -------- c:/Users/fabri/Repos/_courses/django/api_course/django-recipe-api/app/core/admin.py
 """ Admin configuration for the core app """
 
 from django.contrib import admin

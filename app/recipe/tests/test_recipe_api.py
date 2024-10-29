@@ -8,13 +8,20 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from recipe.serializers import RecipeSerializer
+from recipe.serializers import (
+    RecipeSerializer,
+    RecipeDetailSerializer              # This is the serializer for the detail view, providing more information about the recipe
+)
 from core.models import Recipe
 from core.tests.utils import create_user
 
 # from recipe.serializers import RecipeSerializer
 
 RECIPE_URL = reverse('recipe:recipe-list')
+
+def detail_url(recipe_id):
+    """ Return recipe detail URL """
+    return reverse('recipe:recipe-detail', args=[recipe_id])
 
 def create_recipe(user, **params):                                              # This allows us to simplify the tests, and avoid repeating code when creating recipes for tests
     """ Create and return a sample recipe """
@@ -28,17 +35,17 @@ def create_recipe(user, **params):                                              
     defaults.update(params)
     return Recipe.objects.create(user=user, **defaults)
 
-# class PublicRecipeAPITest(TestCase):
-#     """ Test unautenticated API recipe requests """
-#
-#     def setUp(self):
-#         """ Create client """
-#         self.client = APIClient()
-#
-#     def test_aut_required(self):
-#         """ Test auth is required to call API """
-#         response = self.client.get(RECIPE_URL)
-#         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+class PublicRecipeAPITest(TestCase):
+    """ Test unautenticated API recipe requests """
+
+    def setUp(self):
+        """ Create client """
+        self.client = APIClient()
+
+    def test_aut_required(self):
+        """ Test auth is required to call API """
+        response = self.client.get(RECIPE_URL)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
 class PrivateRecipeAPITest(TestCase):
@@ -75,4 +82,13 @@ class PrivateRecipeAPITest(TestCase):
         serializer = RecipeSerializer(recipes, many=True)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, serializer.data)
+
+    def test_view_recipe_detail(self):
+        """ Test viewing a recipe detail """
+        recipe = create_recipe(user=self.user)
+
+        url = detail_url(recipe.id)
+        response = self.client.get(url)
+        serializer = RecipeDetailSerializer(recipe)
         self.assertEqual(response.data, serializer.data)
